@@ -2,13 +2,20 @@
 
 # New JSON content to add
 new_mirrors=(
-  "https://dockerhub.timeweb.cloud".
+  "https://dockerhub.timeweb.cloud"
   "https://mirror.gcr.io"
   "https://daocloud.io"
   "https://c.163.com"
   "https://huecker.io"
   "https://registry.docker-cn.com"
 )
+
+if [ -d /etc/docker ]; then
+  echo "Directory /etc/docker exists."
+else
+  echo "Directory /etc/docker does not exist. Creating a new directory."
+  sudo mkdir /etc/docker
+fi
 
 if [ -f /etc/docker/daemon.json ]; then
   echo "File /etc/docker/daemon.json exists. Updating the content."
@@ -37,15 +44,15 @@ YELLOW='\033[0;33m'
 NOCOLOR='\033[0m'
 
 while true; do
-    read -p "Restart Docker now? (y/N): "
+    read -rp "Restart Docker now? (y/N): "
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        sudo systemctl restart docker
-		echo
-		echo -e "${GREEN}Docker restarted.${NOCOLOR}"
-        break
+      sudo systemctl restart docker
+		  echo
+		  echo -e "${GREEN}Docker restarted.${NOCOLOR}"
+      break
     elif [[ $REPLY =~ ^[Nn]$ ]] || [[ -z $REPLY ]]; then
-		echo
-        echo -e "${YELLOW}Docker was not restarted. Please restart it manually to apply changes.${NOCOLOR}"
-        break
-	fi
+		  echo
+      echo -e "${YELLOW}Docker was not restarted. Please restart it manually to apply changes.${NOCOLOR}"
+      break
+	  fi
 done
